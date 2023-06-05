@@ -10,10 +10,11 @@ const Lexer = struct {
   ch: token.Char,
 
   //Methods
-  pub fn new(input: token.String) *Lexer{
+  pub fn new(l: *Lexer, input: token.String) *Lexer{
     const newToken = token.Token{
       .literal = input,
     };
+    l.read_char();
     return &newToken;
   }
 
@@ -29,6 +30,7 @@ const Lexer = struct {
   }
   
   fn next_token(l: *Lexer) Token {
+    l.skip_whitespace();
     var tok: token.Token = switch (l.ch) {
       '=' => return token.new_token(TokenType.ASSIGN, l.ch),
       ';' => return token.new_token(TokenType.SEMICOLON, l.ch),
@@ -45,6 +47,13 @@ const Lexer = struct {
           };
           tok.literal = l.read_identifier();
           tok.type = token.identifier_type(tok.literal);
+          return tok;
+        }
+        else if(is_digit(l.ch)){
+          var tok = Token{
+            .type = TokenType.INT
+          };
+          tok.literal = l.read_number();
           return tok;
         }
         else{
@@ -64,8 +73,25 @@ const Lexer = struct {
     return l.input[position..l.position];
   }
   
+  fn read_number(l: *Lexer) token.String{
+    var position = l.position;
+    while (is_digit(l.ch)) {
+      l.read_char();
+    }
+    return l.input[position..l.position];
+  }
+  
+  fn skip_whitespace(l: *Lexer) void {
+    while(l.ch == ' ' or l.ch == '\t' or l.ch == '\n' or l.ch == '\r'){
+      l.read_char();
+    }
+  }
 };
 
 fn is_letter(ch: token.Char) bool {
   return 'a' <= ch and ch <= 'z' or 'A' <= ch and ch <= 'Z';
+}
+
+fn is_digit(ch: token.Char) bool {
+  return '0' <= ch and ch <= '9';
 }
