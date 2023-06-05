@@ -10,7 +10,7 @@ const Lexer = struct {
   ch: token.Char,
 
   //Methods
-  pub fn New(input: token.String) *Lexer{
+  pub fn new(input: token.String) *Lexer{
     const newToken = token.Token{
       .literal = input,
     };
@@ -38,10 +38,34 @@ const Lexer = struct {
       '+' => return token.new_token(TokenType.PLUS, l.ch),
       '{' => return token.new_token(TokenType.LBRACE, l.ch),
       '}' => return token.new_token(TokenType.RBRACE, l.ch),
-       0  => return token.new_token(TokenType.EOF, "")
+       0  => return token.new_token(TokenType.EOF, ""),
+      else => {
+        if(is_letter(l.ch)){
+          var tok: Token = Token{
+          };
+          tok.literal = l.read_identifier();
+          tok.type = token.identifier_type(tok.literal);
+          return tok;
+        }
+        else{
+          return token.new_token(TokenType.ILLEGAL, l.ch);
+        }
+      } 
     };
     l.read_char();
     return tok;
   }
+
+  fn read_identifier(l: *Lexer) token.String {
+    var position = l.position;
+    while(is_letter(l.ch)){
+      l.read_char();
+    }
+    return l.input[position..l.position];
+  }
   
 };
+
+fn is_letter(ch: token.Char) bool {
+  return 'a' <= ch and ch <= 'z' or 'A' <= ch and ch <= 'Z';
+}
