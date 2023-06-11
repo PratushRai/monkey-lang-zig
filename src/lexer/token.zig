@@ -1,48 +1,48 @@
 const std = @import("std");
 
-const Char = u8;
-const String = []Char;
-
-const TokenType = enum { ILLEGAL, 
-  EOF, 
-  IDENT, 
-  INT, 
-  ASSIGN, 
-  PLUS, 
-  COMMA, 
-  SEMICOLON, 
-  LPAREN, 
-  RPAREN, 
-  LBRACE, 
-  RBRACE, 
-  FUNCTION, 
-  LET 
+pub const TokenType = enum{
+  Illegal,
+  Eof,
+  Ident, 
+  Int, 
+  Assign,
+  Plus,
+  Comma,
+  SemiColon,
+  Lapren,
+  Rparen,
+  Lbrace,
+  Rbrace,
+  Function,
+  Let
 };
 
-
-
-const Token = struct { 
- type: TokenType,
- literal: String
-};
-
-pub fn new_token(ttype: TokenType, literal: String) Token{
-  return Token{
-    .literal = literal,
-    .type = ttype,
+fn ttype_to_string(ttype: TokenType) []const u8{
+  var s = switch (ttype) {
+    TokenType.Illegal => return "Illegal",
+    TokenType.Eof => return "Eof",
+    TokenType.Ident => return "Ident",
+    TokenType.Int => return "Int",
+    TokenType.Assign => return "Assign",
+    TokenType.Plus => return "Plus",
+    TokenType.Comma => return "Comma",
+    TokenType.SemiColon => return "SemiColon",
+    TokenType.Lapren => return "Lparen",
+    TokenType.Rparen => return "Rparen",
+    TokenType.Lbrace => return "Lbrace",
+    TokenType.Rbrace => return "Rbrace",
+    TokenType.Function => return "Function",
+    TokenType.Let => return "Let"
   };
+  return s;
 }
 
-const map = std.ComptimeStringMap(TokenType, .{
-  .{"let", .LET},
-  .{"fn", .FUNCTION}
-});
-
-pub fn identifier_type(ident: String) TokenType {
-  var tok =  map.get(ident);
-  switch (tok) {
-    TokenType.FUNCTION => return tok,
-    TokenType.LET => return tok,
-    else => return TokenType.IDENT
+pub const Token = struct {
+  ttype: TokenType,
+  literal: []const u8,
+  
+  pub fn print_token(t: *Token) void {
+    std.debug.print("ttype: {s}, literal: {s}", .{ttype_to_string(t.ttype), t.literal});
   }
-}
+};
+
