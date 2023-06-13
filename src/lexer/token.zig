@@ -17,7 +17,7 @@ pub const TokenType = enum{
   Let
 };
 
-fn ttype_to_string(ttype: TokenType) []const u8{
+pub fn ttype_to_string(ttype: TokenType) []const u8{
   var s = switch (ttype) {
     TokenType.Illegal => return "Illegal",
     TokenType.Eof => return "Eof",
@@ -39,10 +39,10 @@ fn ttype_to_string(ttype: TokenType) []const u8{
 
 pub const Token = struct {
   ttype: TokenType,
-  literal: []const u8,
+  literal:  []const u8,
   
-  pub fn print_token(t: *Token) void {
-    std.debug.print("ttype: {s}, literal: {s}", .{ttype_to_string(t.ttype), t.literal});
+  pub fn print_token(t: Token) void {
+    std.debug.print("[ ttype: {s}, literal: {s} ]", .{ttype_to_string(t.ttype), t.literal});
   }
 };
 

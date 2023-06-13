@@ -3,13 +3,16 @@ const lexer = @import("lexer/lexer.zig");
 const std = @import("std");
 
 pub fn main() !void {
-  const l = lexer.new_lexer("hello");
-  l.print();
-  std.debug.print("\n", .{});
-  var t = token.Token{
-    .ttype = token.TokenType.Assign,
-    .literal = "="
-  };
-  t.print_token();
+  var l = lexer.new_lexer("=+(){},;");
+  var i: i32 = 0;
+  while(i < l.input.len){
+    var tok = l.next_token();
+    tok.print_token();
+    print_n();
+    i+=1;
+  } 
 }
 
+fn print_n() void{
+  std.debug.print("\n", .{});
+}
