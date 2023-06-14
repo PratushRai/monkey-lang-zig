@@ -1,5 +1,6 @@
 const std = @import("std");
 const token = @import("token.zig");
+const helper = @import("../helper/helper.zig");
 
 pub const Lexer = struct {
   const Self = @This();
@@ -13,7 +14,7 @@ pub const Lexer = struct {
     .{l.input, l.cursor, l.read_cursor, l.ch});
   }
 
-   pub fn readChar(self: *Self) void {
+   pub fn read_char(self: *Self) void {
         if (self.read_cursor >= self.input.len) {
             self.ch = 0;
         } else {
@@ -38,10 +39,23 @@ pub const Lexer = struct {
       '}' => tok.ttype =  token.TokenType.Rbrace,
       '+' => tok.ttype =  token.TokenType.Plus,
        0  => tok.ttype = token.TokenType.Eof,
-       else => tok.ttype = token.TokenType.Illegal
+       else => {
+        if(is_letter(l.ch)){
+          tok.ttype = look_up_ident(l.read_indetifier());
+          tok.literal = l.read_indetifier();
+        }
+       } 
     }
-    l.readChar();
+    l.read_char();
     return tok;
+  }
+
+  fn read_indetifier(self: *Self) []const u8{
+    var position = self.cursor;
+    while(is_letter(self.ch)){
+      self.read_char();
+    }
+    return self.input[position..self.cursor];
   }
 
   fn current_string(self: Self) []const u8 {
@@ -58,6 +72,22 @@ pub fn new_lexer(input: []const u8) Lexer {
   var nl = Lexer{
     .input = input
   };
-  nl.readChar();
+  nl.read_char();
   return nl;
+}
+
+fn is_letter(ch: u8) bool {
+  return 'a' <= ch and ch <= 'z' or 'A' <= ch and ch <= 'Z';
+}
+
+fn look_up_ident(ident: []const u8) token.TokenType{
+  if(helper.compare_string(ident, "let")){
+    return token.TokenType.Let;
+  }
+  else if(helper.compare_string(ident, "fn")){
+    return token.TokenType.Function;
+  }
+  else{
+    return token.TokenType.Ident;
+  }
 }
