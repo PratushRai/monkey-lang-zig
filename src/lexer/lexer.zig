@@ -25,6 +25,7 @@ pub const Lexer = struct {
     }
 
   pub fn next_token(l: *Self) token.Token {
+    l.skip_whitespace();
     var tok = token.Token{
       .ttype = token.TokenType.Illegal,
       .literal = l.current_string()
@@ -66,6 +67,13 @@ pub const Lexer = struct {
       return "0";
     }
   }
+
+  fn skip_whitespace(self: *Self) void {
+    while(self.ch == ' ' or self.ch == '\t' or self.ch == '\n' or self.ch == '\r'){
+      self.read_char();
+    }
+  }
+
 };
 
 pub fn new_lexer(input: []const u8) Lexer {

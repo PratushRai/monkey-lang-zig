@@ -4,7 +4,7 @@ const std = @import("std");
 const helper = @import("helper/helper.zig");
 
 pub fn main() !void {
-  var l = lexer.new_lexer("let");
+  var l = lexer.new_lexer("\na");
   var i: i32 = 0;
   while(i < l.input.len){
     var tok = l.next_token();
