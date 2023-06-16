@@ -9,10 +9,16 @@ pub const TokenType = enum{
   Plus,
   Comma,
   SemiColon,
+  Gt,
+  Lt,
+  Minus,
+  Slash,
+  Star,
   Lapren,
   Rparen,
   Lbrace,
   Rbrace,
+  Bang,
   Function,
   Let,
   False,
@@ -20,6 +26,8 @@ pub const TokenType = enum{
   Return,
   If,
   Else, 
+  EqEq,
+  BangEqual
 };
 
 pub fn ttype_to_string(ttype: TokenType) []const u8{
@@ -36,6 +44,11 @@ pub fn ttype_to_string(ttype: TokenType) []const u8{
     TokenType.Rparen => return "Rparen",
     TokenType.Lbrace => return "Lbrace",
     TokenType.Rbrace => return "Rbrace",
+    TokenType.Gt => return "Gt",
+    TokenType.Lt => return "Lt",
+    TokenType.Minus => return "Minus",
+    TokenType.Slash => return "Slash",
+    TokenType.Star => return "Star",
     TokenType.Function => return "Function",
     TokenType.Let => return "Let",
     TokenType.False => return "False",
@@ -43,6 +56,9 @@ pub fn ttype_to_string(ttype: TokenType) []const u8{
     TokenType.Return => return "Return",
     TokenType.If => return "If",
     TokenType.Else => return "Else",
+    TokenType.EqEq => return "EqEq",
+    TokenType.Bang => return "Bang",
+    TokenType.BangEqual => return "BangEqual"
   };
   return s;
 }

@@ -24,6 +24,13 @@ pub const Lexer = struct {
         self.read_cursor += 1;
     }
 
+    fn peek_char(self: *Self) u8 {
+      if(self.read_cursor >= self.input.len){
+        return '0';
+      }
+      return self.input[self.cursor+1];
+    }
+
   pub fn next_token(l: *Self) token.Token {
     l.skip_whitespace();
     var tok = token.Token{
@@ -31,14 +38,39 @@ pub const Lexer = struct {
       .literal = l.current_string()
     };
     switch (l.ch) {
-      '=' => tok.ttype = token.TokenType.Assign,
+      '=' => {
+        if(l.peek_char() == '='){
+          tok.literal = l.input[l.cursor..l.read_cursor+1];
+          tok.ttype = token.TokenType.EqEq;
+          l.read_cursor+=1;
+        }
+        else {
+          tok.ttype = token.TokenType.Assign;
+        }
+        },
+
       ';' => tok.ttype = token.TokenType.SemiColon,
       ',' => tok.ttype = token.TokenType.Comma,
       '(' => tok.ttype = token.TokenType.Lapren,
       ')' => tok.ttype = token.TokenType.Rparen,
-      '{' => tok.ttype =  token.TokenType.Lbrace,
-      '}' => tok.ttype =  token.TokenType.Rbrace,
-      '+' => tok.ttype =  token.TokenType.Plus,
+      '{' => tok.ttype = token.TokenType.Lbrace,
+      '}' => tok.ttype = token.TokenType.Rbrace,
+      '+' => tok.ttype = token.TokenType.Plus,
+      '!' => {
+        if(l.peek_char() == '='){
+          tok.literal = l.input[l.cursor..l.read_cursor+1];
+          tok.ttype = token.TokenType.BangEqual;
+          l.read_cursor+=1;
+        }
+        else{
+          tok.ttype = token.TokenType.Bang;
+        }
+        },
+      '/' => tok.ttype = token.TokenType.Slash,
+      '-' => tok.ttype = token.TokenType.Minus,
+      '*' => tok.ttype = token.TokenType.Star,
+      '>' => tok.ttype = token.TokenType.Gt,
+      '<' => tok.ttype = token.TokenType.Lt,
        0  => tok.ttype = token.TokenType.Eof,
        else => {
         if(is_letter(l.ch)){
