@@ -45,6 +45,10 @@ pub const Lexer = struct {
           tok.ttype = look_up_ident(l.read_indetifier());
           tok.literal = l.read_indetifier();
         }
+        if(is_digit(l.ch)){
+          tok.ttype = token.TokenType.Int;
+          tok.literal = l.read_number();
+        }
        } 
     }
     l.read_char();
@@ -57,6 +61,14 @@ pub const Lexer = struct {
       self.read_char();
     }
     return self.input[position..self.cursor];
+  }
+
+  fn read_number(self: *Self) []const u8{
+    var pos = self.cursor;
+    while(is_digit(self.ch)){
+      self.read_char();
+    }
+    return self.input[pos..self.cursor];
   }
 
   fn current_string(self: Self) []const u8 {
@@ -88,12 +100,31 @@ fn is_letter(ch: u8) bool {
   return 'a' <= ch and ch <= 'z' or 'A' <= ch and ch <= 'Z';
 }
 
+fn is_digit(ch: u8) bool {
+  return '0' <= ch and ch <= '9';
+}
+
 fn look_up_ident(ident: []const u8) token.TokenType{
   if(helper.compare_string(ident, "let")){
     return token.TokenType.Let;
   }
   else if(helper.compare_string(ident, "fn")){
     return token.TokenType.Function;
+  }
+  else if(helper.compare_string(ident, "false")){
+    return token.TokenType.False;
+  }
+  else if(helper.compare_string(ident, "true")){
+    return token.TokenType.True;
+  }
+  else if(helper.compare_string(ident, "if")){
+    return token.TokenType.If;
+  }
+  else if(helper.compare_string(ident, "else")){
+    return token.TokenType.Else;
+  }
+  else if(helper.compare_string(ident, "return")){
+    return token.TokenType.Return;
   }
   else{
     return token.TokenType.Ident;

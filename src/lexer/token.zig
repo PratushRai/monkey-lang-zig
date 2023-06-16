@@ -14,7 +14,12 @@ pub const TokenType = enum{
   Lbrace,
   Rbrace,
   Function,
-  Let
+  Let,
+  False,
+  True,
+  Return,
+  If,
+  Else, 
 };
 
 pub fn ttype_to_string(ttype: TokenType) []const u8{
@@ -32,7 +37,12 @@ pub fn ttype_to_string(ttype: TokenType) []const u8{
     TokenType.Lbrace => return "Lbrace",
     TokenType.Rbrace => return "Rbrace",
     TokenType.Function => return "Function",
-    TokenType.Let => return "Let"
+    TokenType.Let => return "Let",
+    TokenType.False => return "False",
+    TokenType.True => return "True",
+    TokenType.Return => return "Return",
+    TokenType.If => return "If",
+    TokenType.Else => return "Else",
   };
   return s;
 }
