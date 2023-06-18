@@ -4,7 +4,7 @@ const std = @import("std");
 const helper = @import("helper/helper.zig");
 
 pub fn main() !void {
-  var l = lexer.new_lexer("\n==!=/*-<>");
+  var l = lexer.new_lexer("fn add () { let num = 9; return num; }");
 
   var i: i32 = 0;
   while(i < l.input.len){
