@@ -4,17 +4,29 @@ const std = @import("std");
 const helper = @import("helper/helper.zig");
 
 pub fn main() !void {
-  var l = lexer.new_lexer("fn add () { let num = 9; return num; }");
 
-  var i: i32 = 0;
-  while(i < l.input.len){
-    var tok = l.next_token();
-    tok.print_token();
-    print_n();
-    i+=1;
-  } 
-  var value = helper.compare_string("hello", "hella");
-  std.debug.print("{any}", .{value});
+    var reader = std.io.getStdIn().reader();
+    var writer = std.io.getStdOut().writer();
+    try writer.print("Welcome to monkey lang repl.", .{});
+    var buffer: [1024]u8 = undefined;
+    while (try reader.readUntilDelimiterOrEof(&buffer, '\n')) |line| {
+        var lex = lexer.new_lexer(line);
+        while (lex.has_tokens()) {
+            const tok = lex.next_token();
+            tok.print_token();
+        }
+    }
+
+  // var i: i32 = 0;
+  // while(i < l.input.len){
+  //   var tok = l.next_token();
+  //   tok.print_token();
+  //   print_n();
+  //   i+=1;
+  // } 
+  
+  // var value = helper.compare_string("hello", "hella");
+  // std.debug.print("{any}", .{value});
 }
 
 fn print_n() void{

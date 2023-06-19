@@ -72,14 +72,22 @@ pub const Lexer = struct {
       '>' => tok.ttype = token.TokenType.Gt,
       '<' => tok.ttype = token.TokenType.Lt,
        0  => tok.ttype = token.TokenType.Eof,
+      '0'...'9' => {
+        const ident = l.read_number();
+        tok.ttype = token.TokenType.Int;
+        tok.literal = ident;
+        l.read_cursor+=1;
+      },
        else => {
         if(is_letter(l.ch)){
           tok.ttype = look_up_ident(l.read_indetifier());
           tok.literal = l.read_indetifier();
+          l.read_cursor+=1;
         }
         if(is_digit(l.ch)){
           tok.ttype = token.TokenType.Int;
           tok.literal = l.read_number();
+          l.read_cursor+=1;
         }
        } 
     }
@@ -92,6 +100,7 @@ pub const Lexer = struct {
     while(is_letter(self.ch)){
       self.read_char();
     }
+    self.read_cursor+=1;
     return self.input[position..self.cursor];
   }
 
@@ -100,6 +109,7 @@ pub const Lexer = struct {
     while(is_digit(self.ch)){
       self.read_char();
     }
+    self.read_cursor+=1;
     return self.input[pos..self.cursor];
   }
 
@@ -116,6 +126,10 @@ pub const Lexer = struct {
     while(self.ch == ' ' or self.ch == '\t' or self.ch == '\n' or self.ch == '\r'){
       self.read_char();
     }
+  }
+  
+  pub fn has_tokens(self: *Self) bool {
+    return self.read_cursor <= self.input.len;
   }
 
 };

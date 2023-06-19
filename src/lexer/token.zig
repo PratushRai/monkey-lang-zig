@@ -68,8 +68,7 @@ pub const Token = struct {
   literal:  []const u8,
   
   pub fn print_token(t: Token) void {
-    std.debug.print("[ ttype: {s}, literal: {s} ]", .{ttype_to_string(t.ttype), t.literal});
-    std.debug.print("\n{s}", .{t.literal});
+    std.debug.print("[ ttype: {s}, literal: {s} ]\n", .{ttype_to_string(t.ttype), t.literal});
   }
 };
 
