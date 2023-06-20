@@ -76,18 +76,13 @@ pub const Lexer = struct {
         const ident = l.read_number();
         tok.ttype = token.TokenType.Int;
         tok.literal = ident;
-        l.read_cursor+=1;
+        l.read_cursor-=1;
       },
        else => {
         if(is_letter(l.ch)){
           tok.ttype = look_up_ident(l.read_indetifier());
           tok.literal = l.read_indetifier();
-          l.read_cursor+=1;
-        }
-        if(is_digit(l.ch)){
-          tok.ttype = token.TokenType.Int;
-          tok.literal = l.read_number();
-          l.read_cursor+=1;
+          l.read_cursor-=1;
         }
        } 
     }
@@ -100,7 +95,6 @@ pub const Lexer = struct {
     while(is_letter(self.ch)){
       self.read_char();
     }
-    self.read_cursor+=1;
     return self.input[position..self.cursor];
   }
 
@@ -109,7 +103,6 @@ pub const Lexer = struct {
     while(is_digit(self.ch)){
       self.read_char();
     }
-    self.read_cursor+=1;
     return self.input[pos..self.cursor];
   }
 
