@@ -7,7 +7,8 @@ pub fn main() !void {
 
     var reader = std.io.getStdIn().reader();
     var writer = std.io.getStdOut().writer();
-    try writer.print("Welcome to monkey lang repl.", .{});
+    try writer.print("Welcome to monkey lang repl.\n", .{});
+    try writer.print(">>> ", .{});
     var buffer: [1024]u8 = undefined;
     while (try reader.readUntilDelimiterOrEof(&buffer, '\n')) |line| {
         var lex = lexer.new_lexer(line);
@@ -15,6 +16,7 @@ pub fn main() !void {
             const tok = lex.next_token();
             tok.print_token();
         }
+        try writer.print(">>> ", .{});
     }
 
   // var i: i32 = 0;
