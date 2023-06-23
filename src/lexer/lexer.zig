@@ -78,13 +78,12 @@ pub const Lexer = struct {
         tok.literal = ident;
         l.read_cursor-=1;
       },
-       else => {
-        if(is_letter(l.ch)){
-          tok.ttype = look_up_ident(l.read_indetifier());
-          tok.literal = l.read_indetifier();
-          l.read_cursor-=1;
-        }
-       } 
+      'a'...'z', 'A'...'Z', '_' => {
+        tok.ttype = look_up_ident(l.read_indetifier());
+        tok.literal = l.read_indetifier();
+        l.read_cursor-=1;
+      },
+       else => tok.ttype = token.TokenType.Illegal, 
     }
     l.read_char();
     return tok;
@@ -127,7 +126,7 @@ pub const Lexer = struct {
 
 };
 
-pub fn new_lexer(input: []const u8) Lexer {
+pub fn init(input: []const u8) Lexer {
   var nl = Lexer{
     .input = input
   };
@@ -136,7 +135,7 @@ pub fn new_lexer(input: []const u8) Lexer {
 }
 
 fn is_letter(ch: u8) bool {
-  return 'a' <= ch and ch <= 'z' or 'A' <= ch and ch <= 'Z';
+  return 'a' <= ch and ch <= 'z' or 'A' <= ch and ch <= 'Z' or ch == '_';
 }
 
 fn is_digit(ch: u8) bool {

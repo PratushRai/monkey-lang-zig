@@ -11,7 +11,7 @@ pub fn main() !void {
     try writer.print(">>> ", .{});
     var buffer: [1024]u8 = undefined;
     while (try reader.readUntilDelimiterOrEof(&buffer, '\n')) |line| {
-        var lex = lexer.new_lexer(line);
+        var lex = lexer.init(line);
         while (lex.has_tokens()) {
             const tok = lex.next_token();
             tok.print_token();
