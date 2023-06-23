@@ -83,6 +83,14 @@ pub const Lexer = struct {
         tok.literal = l.read_indetifier();
         l.read_cursor-=1;
       },
+      '"' => {
+        if(is_letter(l.peek_char())){
+          tok.ttype = token.TokenType.String;
+          tok.literal = l.read_string();
+        }else{
+          tok.ttype = token.TokenType.Illegal;
+        }
+      },
        else => tok.ttype = token.TokenType.Illegal, 
     }
     l.read_char();
@@ -100,6 +108,15 @@ pub const Lexer = struct {
   fn read_number(self: *Self) []const u8{
     var pos = self.cursor;
     while(is_digit(self.ch)){
+      self.read_char();
+    }
+    return self.input[pos..self.cursor];
+  }
+
+  fn read_string(self: *Self) []const u8{
+    self.read_char();
+    var pos = self.cursor;
+    while(is_letter(self.ch)){
       self.read_char();
     }
     return self.input[pos..self.cursor];

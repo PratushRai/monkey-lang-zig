@@ -27,7 +27,8 @@ pub const TokenType = enum{
   If,
   Else, 
   EqEq,
-  BangEqual
+  BangEqual,
+  String
 };
 
 pub fn ttype_to_string(ttype: TokenType) []const u8{
@@ -58,7 +59,8 @@ pub fn ttype_to_string(ttype: TokenType) []const u8{
     TokenType.Else => return "Else",
     TokenType.EqEq => return "EqEq",
     TokenType.Bang => return "Bang",
-    TokenType.BangEqual => return "BangEqual"
+    TokenType.BangEqual => return "BangEqual",
+    TokenType.String => return "String"
   };
   return s;
 }
