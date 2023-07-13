@@ -3,6 +3,7 @@ const lexer = @import("lexer/lexer.zig");
 const std = @import("std");
 const helper = @import("helper/helper.zig");
 
+//Parser
 pub fn main() !void {
 
     var reader = std.io.getStdIn().reader();
